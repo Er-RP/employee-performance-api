@@ -1,16 +1,18 @@
 const {
   NotFoundError,
   UnAuthorizedError,
+  CustomError,
 } = require("../error_handlers/customErrors");
 const USER = require("../models/userModel");
+const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+const { userHandler } = require("../utils/responseHandler");
 
 const REGISTER = async (req, res, next) => {
   try {
     const payload = req.body;
     const newUser = await USER.create(payload);
-    return res.status(201).json(newUser);
+    return res.status(201).json({ success: true, user: userHandler(newUser) });
   } catch (err) {
-    console.log("Error : ", err);
     next(err);
   }
 };
@@ -25,23 +27,53 @@ const LOGIN = async (req, res, next) => {
       } else {
         const isPasswordMatch = await isUserFound.checkPasswordMatch(password);
         if (isPasswordMatch) {
-          return res.json({ success: true });
+          const tokenPayload = { email: isUserFound.email };
+          const accessToken = generateAccessToken(tokenPayload);
+          const refreshToken = generateRefreshToken(tokenPayload);
+          if (accessToken && refreshToken) {
+            res.cookie("refreshToken", refreshToken, { httpOnly: true });
+            res.cookie("accessToken", accessToken, { httpOnly: true });
+            if (isUserFound["role"] === "ADMIN") {
+              res.cookie("adminToken", "IAM_ADMIN", { httpOnly: true });
+            }
+            return res.json({ success: true, user: userHandler(isUserFound) });
+          } else {
+            next(
+              new CustomError("Internal Server Error - Token generation failed")
+            );
+          }
         } else {
           next(new UnAuthorizedError("Password is incorrect"));
         }
       }
     } else {
-      next(new NotFoundError("Email not found"));
+      next(new NotFoundError("User not found"));
     }
-    const newUser = await USER.create(payload);
-    return res.status(201).json(newUser);
   } catch (err) {
-    console.log("Error : ", err);
     next(err);
   }
 };
 
-const GET = async (req, res, next) => {};
+const GET_ALL_USERS = async (req, res, next) => {
+  try {
+    const isUserFound = await USER.findOneByEmail(req.user.email);
+    if (isUserFound) {
+      if (isUserFound?.role === "HR" || isUserFound?.role === "ADMIN") {
+        const query = {};
+        if (isUserFound?.role === "HR") query.role = { $nin: ["HR", "ADMIN"] };
+        const users = await USER.find(query);
+        const modifiedUsers = users.map((user) => userHandler(user));
+        return res.status(200).json({ success: true, users: modifiedUsers });
+      } else {
+        next(new CustomError("Forbidden", 403));
+      }
+    } else {
+      next(new NotFoundError("User not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 const UPDATE = async (req, res, next) => {};
 
-module.exports = { REGISTER, LOGIN };
+module.exports = { REGISTER, LOGIN, GET_ALL_USERS };

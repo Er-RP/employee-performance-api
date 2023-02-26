@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const { PORT, NODE_ENV } = require("./config");
 const mongoose = require("mongoose");
 const connectDB = require("./utils/connectDB");
@@ -17,15 +18,14 @@ if (NODE_ENV === "development") {
 // 2. Request JSON body parser middleware
 app.use(express.json());
 
+// 2. Cookie parser middleware
+app.use(cookieParser());
+
 //Connect to MongoDB
 connectDB();
 const db = mongoose.connection;
 //Removing _id and --v, Adding virtuals while return docs from mongodb
 mongoose.set("toJSON", {
-  transform: function (doc, ret, options) {
-    delete ret._id;
-    return ret;
-  },
   virtuals: true,
   versionKey: false,
   getters: true,

@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  department: {
+    type: String,
+  },
+  jobTitle: {
+    type: String,
+  },
   role: {
     type: String,
     required: true,
