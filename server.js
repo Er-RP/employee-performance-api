@@ -1,5 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
+const cors = require("cors");
 const { PORT, NODE_ENV } = require("./config");
 const mongoose = require("mongoose");
 const connectDB = require("./utils/connectDB");
@@ -9,7 +11,7 @@ const requestMiddleware = require("./middlewares/requestMiddleware");
 const apiErrorHandler = require("./error_handlers/apiErrorHandler");
 const Logger = require("./utils/Logger");
 const app = express();
-
+app.disable("x-powered-by");
 //Middlewares
 // 1. Request middleware
 if (NODE_ENV === "development") {
@@ -18,8 +20,29 @@ if (NODE_ENV === "development") {
 // 2. Request JSON body parser middleware
 app.use(express.json());
 
-// 2. Cookie parser middleware
+// 3. Cookie parser middleware
 app.use(cookieParser());
+
+// 4. Compression middleware
+const shouldCompress = (req, res) => {
+  if (req.headers["Accept-Encoding"]) {
+    return false;
+  }
+  return compression.filter(req, res);
+};
+app.use(
+  compression({
+    filter: shouldCompress,
+    threshold: 0,
+  })
+);
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 
 //Connect to MongoDB
 connectDB();
