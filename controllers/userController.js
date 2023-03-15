@@ -74,6 +74,17 @@ const GET_ALL_USERS = async (req, res, next) => {
     next(error);
   }
 };
+
+const ME = async (req, res, next) => {
+  try {
+    const isUserFound = await USER.findOneByEmail(req.user.email);
+    return res
+      .status(200)
+      .json({ success: true, user: userHandler(isUserFound) });
+  } catch (error) {
+    next(error);
+  }
+};
 const UPDATE = async (req, res, next) => {};
 
-module.exports = { REGISTER, LOGIN, GET_ALL_USERS };
+module.exports = { REGISTER, LOGIN, GET_ALL_USERS, ME };
