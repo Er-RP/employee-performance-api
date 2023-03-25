@@ -3,6 +3,7 @@ const { MONGO_URI } = require("../config");
 
 const connectDB = async () => {
   try {
+    mongoose.set("strictQuery", false);
     const conn = await mongoose.connect(MONGO_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
