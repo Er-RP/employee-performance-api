@@ -52,6 +52,11 @@ mongoose.set("toJSON", {
   virtuals: true,
   versionKey: false,
   getters: true,
+  transform: function (doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+  },
 });
 
 db.on("error", console.error.bind(console, "Connection Error :"));
