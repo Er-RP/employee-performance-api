@@ -59,7 +59,7 @@ const authenticateUser = (req, res, next) => {
                   else {
                     res.cookie("accessToken", accessToken, {
                       httpOnly: true,
-                      maxAge: 1 * 60 * 1000,
+                      maxAge: 7 * 24 * 60 * 60 * 1000,
                     });
                     req.user = { email: decodedData.email };
                     next();

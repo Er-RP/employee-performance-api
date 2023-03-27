@@ -33,16 +33,16 @@ const LOGIN = async (req, res, next) => {
           if (accessToken && refreshToken) {
             res.cookie("refreshToken", refreshToken, {
               httpOnly: true,
-              maxAge: 24 * 60 * 60 * 1000,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             res.cookie("accessToken", accessToken, {
               httpOnly: true,
-              maxAge: 1 * 60 * 1000,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
             });
             if (isUserFound["role"] === "ADMIN") {
               res.cookie("adminToken", "IAM_ADMIN", {
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
               });
             }
             return res.json({ success: true, user: userHandler(isUserFound) });
