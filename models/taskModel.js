@@ -5,9 +5,9 @@ const taskSchema = new Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    assignee: { type: Schema.Types.ObjectId, ref: "users" },
-    createdBy: { type: Schema.Types.ObjectId, ref: "users" },
-    updatedBy: { type: Schema.Types.ObjectId, ref: "users" },
+    assignee: { type: Schema.Types.ObjectId, ref: "User" },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    updatedBy: { type: Schema.Types.ObjectId, ref: "User" },
     estimatedTime: { type: Number, required: true },
     actualTime: { type: Number },
     progressLevel: {
@@ -20,11 +20,11 @@ const taskSchema = new Schema(
     status: {
       type: String,
       required: true,
-      default: "Notyet",
-      enum: ["Notyet", "Progress", "Review", "Completed"],
+      default: "To Do",
+      enum: ["To Do", "Progress", "Review", "Completed"],
     },
     completedAt: { type: Date },
-    project: { type: Schema.Types.ObjectId, ref: "projects", required: true },
+    project: { type: Schema.Types.ObjectId, ref: "Project" },
   },
   { timestamps: true }
 );

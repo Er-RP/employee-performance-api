@@ -40,7 +40,12 @@ const GET = async (req, res, next) => {
     if (user?.role == "EMPLOYEE") {
       projectQuery.members = id;
     }
-    const projects = await PROJECT.find(projectQuery);
+    const projects = await PROJECT.find(projectQuery, null, {
+      populate: [
+        { path: "manager", select: "id firstName lastName fullName" },
+        { path: "members", select: "id firstName lastName fullName" },
+      ],
+    });
     return res.status(200).json({ success: true, projects });
   } catch (err) {
     next(err);
