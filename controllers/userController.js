@@ -31,10 +31,19 @@ const LOGIN = async (req, res, next) => {
           const accessToken = generateAccessToken(tokenPayload);
           const refreshToken = generateRefreshToken(tokenPayload);
           if (accessToken && refreshToken) {
-            res.cookie("refreshToken", refreshToken, { httpOnly: true });
-            res.cookie("accessToken", accessToken, { httpOnly: true });
+            res.cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              maxAge: 1 * 60 * 1000,
+            });
+            res.cookie("accessToken", accessToken, {
+              httpOnly: true,
+              maxAge: 24 * 60 * 60 * 1000,
+            });
             if (isUserFound["role"] === "ADMIN") {
-              res.cookie("adminToken", "IAM_ADMIN", { httpOnly: true });
+              res.cookie("adminToken", "IAM_ADMIN", {
+                httpOnly: true,
+                maxAge: 24 * 60 * 60 * 1000,
+              });
             }
             return res.json({ success: true, user: userHandler(isUserFound) });
           } else {

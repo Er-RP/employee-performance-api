@@ -19,7 +19,7 @@ const existingUser = async (req, res, next) => {
   }
 };
 
-router.post("/register", isAdmin, existingUser, REGISTER);
+router.post("/register", existingUser, REGISTER);
 router.post("/login", LOGIN);
 
 module.exports = router;
