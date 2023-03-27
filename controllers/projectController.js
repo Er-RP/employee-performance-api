@@ -31,7 +31,15 @@ const CREATE = async (req, res, next) => {
 
 const GET = async (req, res, next) => {
   try {
+    const user = await USER.findOneByEmail(req.user.email);
+    const id = user.id;
     const projectQuery = { isActive: true };
+    if (user?.role == "MANAGER") {
+      projectQuery.manager = id;
+    }
+    if (user?.role == "EMPLOYEE") {
+      projectQuery.members = id;
+    }
     const projects = await PROJECT.find(projectQuery);
     return res.status(200).json({ success: true, projects });
   } catch (err) {
