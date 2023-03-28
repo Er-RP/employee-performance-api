@@ -24,6 +24,7 @@ const taskSchema = new Schema(
       enum: ["To Do", "Progress", "Review", "Completed"],
     },
     completedAt: { type: Date },
+    isActive: { type: Boolean, default: true },
     project: { type: Schema.Types.ObjectId, ref: "Project" },
   },
   { timestamps: true }
