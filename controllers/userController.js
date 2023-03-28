@@ -68,7 +68,7 @@ const GET_ALL_USERS = async (req, res, next) => {
     const isUserFound = await USER.findOneByEmail(req.user.email);
     if (isUserFound) {
       if (isUserFound?.role === "HR" || isUserFound?.role === "ADMIN") {
-        const query = {};
+        const query = {isActive:true};
         if (isUserFound?.role === "HR") query.role = { $nin: ["HR", "ADMIN"] };
         const users = await USER.find(query);
         const modifiedUsers = users.map((user) => userHandler(user));
