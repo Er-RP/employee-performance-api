@@ -1,6 +1,15 @@
 const { createLogger, transports, format, addColors } = require("winston");
 const { NODE_ENV } = require("../config");
 const { combine, timestamp, label, printf, prettyPrint, colorize } = format;
+const fs = require('fs');
+const logDirectory = 'logs';
+
+if (!fs.existsSync(logDirectory)) {
+  fs.mkdirSync(logDirectory);
+}
+
+// continue with your code that requires the "logs" directory
+
 
 // Define your severity levels.
 // With them, You can create log files,
