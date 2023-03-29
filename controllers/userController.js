@@ -99,6 +99,26 @@ const ME = async (req, res, next) => {
     next(error);
   }
 };
-const UPDATE = async (req, res, next) => {};
 
-module.exports = { REGISTER, LOGIN, GET_ALL_USERS, ME };
+const LOGOUT = async (req, res, next) => {
+  try {
+    res.cookie("refreshToken", null, {
+      httpOnly: true,
+      maxAge: 0,
+    });
+    res.cookie("accessToken", null, {
+      httpOnly: true,
+      maxAge: 0,
+    });
+    res.cookie("adminToken", null, {
+      httpOnly: true,
+      maxAge: 0,
+    });
+
+    return res.json({ success: true, msg: "Logged out successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { REGISTER, LOGIN, GET_ALL_USERS, ME, LOGOUT };
