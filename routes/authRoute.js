@@ -1,5 +1,5 @@
 const express = require("express");
-const { REGISTER, LOGIN } = require("../controllers/userController");
+const { REGISTER, LOGIN, LOGOUT } = require("../controllers/userController");
 const { CustomError } = require("../error_handlers/customErrors");
 const USER = require("../models/userModel");
 const { isAdmin } = require("../utils/token");
@@ -21,5 +21,6 @@ const existingUser = async (req, res, next) => {
 
 router.post("/register", existingUser, REGISTER);
 router.post("/login", LOGIN);
+router.get("/logout", LOGOUT);
 
 module.exports = router;
