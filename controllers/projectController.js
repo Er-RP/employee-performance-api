@@ -1,4 +1,4 @@
-const  mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 const {
   NotFoundError,
   UnAuthorizedError,
@@ -42,10 +42,7 @@ const GET = async (req, res, next) => {
       projectQuery.members = id;
     }
     const projects = await PROJECT.find(projectQuery, null, {
-      populate: [
-        { path: "manager", select: "id firstName lastName fullName" },
-        { path: "members", select: "id firstName lastName fullName" },
-      ],
+      populate: [{ path: "manager", select: "id firstName lastName fullName" }],
     });
     return res.status(200).json({ success: true, projects });
   } catch (err) {
@@ -57,18 +54,25 @@ const GET_PROJECT_BY_ID = async (req, res, next) => {
   try {
     const id = req.params;
     const ID = mongoose.Types.ObjectId(id);
-    const project = await PROJECT.findById(ID,null,{
+    const project = await PROJECT.findById(ID, null, {
       populate: [
         { path: "manager", select: "id firstName lastName fullName" },
         { path: "members", select: "id firstName lastName fullName" },
+        {
+          path: "tasks",
+          populate: {
+            path: "assignee",
+            select: "id firstName lastName fullName",
+          },
+        },
       ],
     });
-    if(project){
-    return res.status(200).json({ success: true, project });} 
+    if (project) {
+      return res.status(200).json({ success: true, project });
+    }
   } catch (err) {
     next(err);
   }
 };
-
 
 module.exports = { CREATE, GET, GET_PROJECT_BY_ID };
