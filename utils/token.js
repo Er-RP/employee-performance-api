@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require("../config");
 const { UnAuthorizedError } = require("../error_handlers/customErrors");
+const { isDevelopment } = require("./currentEnv");
 
 const generateAccessToken = (data) => {
   try {
@@ -61,6 +62,7 @@ const authenticateUser = (req, res, next) => {
                       httpOnly: true,
                       maxAge: 7 * 24 * 60 * 60 * 1000,
                       sameSite: "None",
+                      secure: !isDevelopment,
                     });
                     req.user = { email: decodedData.email };
                     next();

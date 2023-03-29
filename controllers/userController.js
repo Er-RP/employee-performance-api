@@ -6,7 +6,7 @@ const {
 const USER = require("../models/userModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/token");
 const { userHandler } = require("../utils/responseHandler");
-
+const { isDevelopment } = require("../config");
 const REGISTER = async (req, res, next) => {
   try {
     const payload = req.body;
@@ -35,17 +35,20 @@ const LOGIN = async (req, res, next) => {
               httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
               sameSite: "None",
+              secure: !isDevelopment,
             });
             res.cookie("accessToken", accessToken, {
               httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
               sameSite: "None",
+              secure: !isDevelopment,
             });
             if (isUserFound["role"] === "ADMIN") {
               res.cookie("adminToken", "IAM_ADMIN", {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 sameSite: "None",
+                secure: !isDevelopment,
               });
             }
             return res.json({ success: true, user: userHandler(isUserFound) });
@@ -109,16 +112,19 @@ const LOGOUT = async (req, res, next) => {
       httpOnly: true,
       maxAge: 0,
       sameSite: "None",
+      secure: !isDevelopment,
     });
     res.cookie("accessToken", null, {
       httpOnly: true,
       maxAge: 0,
       sameSite: "None",
+      secure: !isDevelopment,
     });
     res.cookie("adminToken", null, {
       httpOnly: true,
       maxAge: 0,
       sameSite: "None",
+      secure: !isDevelopment,
     });
 
     return res.json({ success: true, msg: "Logged out successfully" });
