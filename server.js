@@ -23,27 +23,26 @@ app.use(express.json());
 // 3. Cookie parser middleware
 app.use(cookieParser());
 
-// 4. Compression middleware
-const shouldCompress = (req, res) => {
-  if (req.headers["Accept-Encoding"]) {
-    return false;
-  }
-  return compression.filter(req, res);
-};
-app.use(
-  compression({
-    filter: shouldCompress,
-    threshold: 0,
-  })
-);
+// // 4. Compression middleware
+// const shouldCompress = (req, res) => {
+//   if (req.headers["Accept-Encoding"]) {
+//     return false;
+//   }
+//   return compression.filter(req, res);
+// };
+// app.use(
+//   compression({
+//     filter: shouldCompress,
+//     threshold: 0,
+//   })
+// );
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://employee-performance-web.vercel.app",
-    ],
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
     credentials: true,
   })
 );
