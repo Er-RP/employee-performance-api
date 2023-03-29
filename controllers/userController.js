@@ -34,15 +34,18 @@ const LOGIN = async (req, res, next) => {
             res.cookie("refreshToken", refreshToken, {
               httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
+              sameSite: "None",
             });
             res.cookie("accessToken", accessToken, {
               httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
+              sameSite: "None",
             });
             if (isUserFound["role"] === "ADMIN") {
               res.cookie("adminToken", "IAM_ADMIN", {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000,
+                sameSite: "None",
               });
             }
             return res.json({ success: true, user: userHandler(isUserFound) });
@@ -105,14 +108,17 @@ const LOGOUT = async (req, res, next) => {
     res.cookie("refreshToken", null, {
       httpOnly: true,
       maxAge: 0,
+      sameSite: "None",
     });
     res.cookie("accessToken", null, {
       httpOnly: true,
       maxAge: 0,
+      sameSite: "None",
     });
     res.cookie("adminToken", null, {
       httpOnly: true,
       maxAge: 0,
+      sameSite: "None",
     });
 
     return res.json({ success: true, msg: "Logged out successfully" });
