@@ -31,10 +31,19 @@ const LOGIN = async (req, res, next) => {
           const accessToken = generateAccessToken(tokenPayload);
           const refreshToken = generateRefreshToken(tokenPayload);
           if (accessToken && refreshToken) {
-            res.cookie("refreshToken", refreshToken, { httpOnly: true });
-            res.cookie("accessToken", accessToken, { httpOnly: true });
+            res.cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+            res.cookie("accessToken", accessToken, {
+              httpOnly: true,
+              maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
             if (isUserFound["role"] === "ADMIN") {
-              res.cookie("adminToken", "IAM_ADMIN", { httpOnly: true });
+              res.cookie("adminToken", "IAM_ADMIN", {
+                httpOnly: true,
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+              });
             }
             return res.json({ success: true, user: userHandler(isUserFound) });
           } else {
@@ -58,9 +67,14 @@ const GET_ALL_USERS = async (req, res, next) => {
   try {
     const isUserFound = await USER.findOneByEmail(req.user.email);
     if (isUserFound) {
-      if (isUserFound?.role === "HR" || isUserFound?.role === "ADMIN") {
-        const query = {};
-        if (isUserFound?.role === "HR") query.role = { $nin: ["HR", "ADMIN"] };
+      if (
+        isUserFound?.role === "HR" ||
+        isUserFound?.role === "ADMIN" ||
+        isUserFound?.role === "MANAGER"
+      ) {
+        const query = { isActive: true };
+        if (isUserFound?.role !== "ADMIN")
+          query.role = { $nin: ["HR", "ADMIN"] };
         const users = await USER.find(query);
         const modifiedUsers = users.map((user) => userHandler(user));
         return res.status(200).json({ success: true, users: modifiedUsers });
