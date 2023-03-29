@@ -42,7 +42,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://employee-performance-web.vercel.app/",
+      "https://employee-performance-web.vercel.app",
     ],
     credentials: true,
   })
