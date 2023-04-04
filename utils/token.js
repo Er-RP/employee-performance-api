@@ -59,10 +59,10 @@ const authenticateUser = (req, res, next) => {
                     );
                   else {
                     res.cookie("accessToken", accessToken, {
-                      // httpOnly: true,
+                      httpOnly: true,
                       maxAge: 7 * 24 * 60 * 60 * 1000,
-                      // sameSite: "None",
-                      // secure: !isDevelopment,
+                      sameSite: "None",
+                      secure: !isDevelopment,
                     });
                     req.user = { email: decodedData.email };
                     next();
