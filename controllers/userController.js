@@ -32,20 +32,20 @@ const LOGIN = async (req, res, next) => {
           const refreshToken = generateRefreshToken(tokenPayload);
           if (accessToken && refreshToken) {
             res.cookie("refreshToken", refreshToken, {
-              httpOnly: true,
+              // httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
               // sameSite: "None",
               // secure: !isDevelopment,
             });
             res.cookie("accessToken", accessToken, {
-              httpOnly: true,
+              // httpOnly: true,
               maxAge: 7 * 24 * 60 * 60 * 1000,
               // sameSite: "None",
               // secure: !isDevelopment,
             });
             if (isUserFound["role"] === "ADMIN") {
               res.cookie("adminToken", "IAM_ADMIN", {
-                httpOnly: true,
+                // httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 // sameSite: "None",
                 // secure: !isDevelopment,
@@ -109,19 +109,19 @@ const ME = async (req, res, next) => {
 const LOGOUT = async (req, res, next) => {
   try {
     res.cookie("refreshToken", null, {
-      httpOnly: true,
+      // httpOnly: true,
       maxAge: 0,
       // sameSite: "None",
       // secure: !isDevelopment,
     });
     res.cookie("accessToken", null, {
-      httpOnly: true,
+      // httpOnly: true,
       maxAge: 0,
       // sameSite: "None",
       // secure: !isDevelopment,
     });
     res.cookie("adminToken", null, {
-      httpOnly: true,
+      // httpOnly: true,
       maxAge: 0,
       // sameSite: "None",
       // secure: !isDevelopment,

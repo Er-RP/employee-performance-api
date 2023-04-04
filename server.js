@@ -20,9 +20,6 @@ if (NODE_ENV === "development") {
 // 2. Request JSON body parser middleware
 app.use(express.json());
 
-// 3. Cookie parser middleware
-app.use(cookieParser());
-
 // // 4. Compression middleware
 // const shouldCompress = (req, res) => {
 //   if (req.headers["Accept-Encoding"]) {
@@ -50,7 +47,8 @@ app.use(
     credentials: true,
   })
 );
-
+// 3. Cookie parser middleware
+app.use(cookieParser());
 //Connect to MongoDB
 connectDB();
 const db = mongoose.connection;
